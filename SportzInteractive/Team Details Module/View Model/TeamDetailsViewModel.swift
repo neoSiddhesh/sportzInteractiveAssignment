@@ -13,15 +13,10 @@ class TeamDetailsViewModel {
     private var teamHomeID: String = ""
     private var teamAwayID: String = ""
     
-    var filterOprions = ["All"]
-    
     init(fixture: MatchDetailResponse?) {
         self.fixture = fixture
         self.teamHomeID = fixture?.matchdetail?.teamHome ?? ""
         self.teamAwayID = fixture?.matchdetail?.teamAway ?? ""
-        
-        filterOprions.append(fixture?.teams?[self.teamHomeID]?.nameFull ?? "")
-        filterOprions.append(fixture?.teams?[self.teamAwayID]?.nameFull ?? "")
     }
     
     var homeTeam: [Player]? {

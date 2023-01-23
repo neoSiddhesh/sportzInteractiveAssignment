@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MatchCenterViewController: UIViewController {
     
     @IBOutlet weak var fixtureTableView: UITableView!
     
@@ -27,14 +27,14 @@ class ViewController: UIViewController {
         fixtureTableView.delegate = self
         fixtureTableView.dataSource = self
         
-        fixtureViewModel = FixtureViewModel(fixtureAPI: FixtureAPI())
+        fixtureViewModel = FixtureViewModel()
         fixtureViewModel?.delegate = self
 
         setupView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        title = "Fixtures"
+        title = Constant.matchCenter
         if #available(iOS 15, *) {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -48,37 +48,37 @@ class ViewController: UIViewController {
     }
     
     func setupView() {
-        let fixtureNib = UINib(nibName: "FixtureTableViewCell", bundle: nil)
-        fixtureTableView.register(fixtureNib, forCellReuseIdentifier: "FixtureTableViewCell")
+        let fixtureNib = UINib(nibName: Constant.fixtureTableViewCell, bundle: nil)
+        fixtureTableView.register(fixtureNib, forCellReuseIdentifier: Constant.fixtureTableViewCell)
         
         fixtureViewModel?.fetchFixtureData()
         Spinner.start()
     }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension MatchCenterViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fixtures?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "FixtureTableViewCell", for: indexPath) as! FixtureTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.fixtureTableViewCell, for: indexPath) as! FixtureTableViewCell
         cell.setupFixtureTableViewCell(matchDetailResponse: fixtures?[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewModel = TeamDetailsViewModel(fixture: fixtures?[indexPath.row])
-        let storyboard = UIStoryboard(name: "TeamDetailsVC", bundle: nil)
-        let nextVC = storyboard.instantiateViewController(identifier: "TeamDetailsVC") { coder in
-            return TeamDetailsVC(coder: coder, viewModel: viewModel)
+        let storyboard = UIStoryboard(name: Constant.teamDetailsVC, bundle: nil)
+        let nextVC = storyboard.instantiateViewController(identifier: Constant.teamDetailsVC) { coder in
+            return TeamDetailsViewController(coder: coder, viewModel: viewModel)
         }
         nextVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(nextVC, animated: true)
     }
 }
 
-extension ViewController: FixtureViewModelOutput {
+extension MatchCenterViewController: FixtureViewModelOutput {
     func getFixtureData(data: [MatchDetailResponse]?) {
         self.fixtures = data ?? []
     }

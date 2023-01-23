@@ -15,11 +15,11 @@ class TeamDetailTableViewCell: UITableViewCell {
         var playerName = player?.nameFull ?? ""
         
         if let wicketKeeper = player?.isKeeper, wicketKeeper, let captain = player?.isCaptain, captain {
-            playerName += " [C & WK]"
+            playerName += Constant.captainWK
         } else if let wicketKeeper = player?.isKeeper, wicketKeeper {
-            playerName += " [WK]"
+            playerName += Constant.wk
         } else if let captain = player?.isCaptain, captain {
-            playerName += " [C]"
+            playerName += Constant.captain
         }
         playerNameLbl.text = playerName
     }

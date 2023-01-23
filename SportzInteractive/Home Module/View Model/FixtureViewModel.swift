@@ -13,16 +13,12 @@ protocol FixtureViewModelOutput: AnyObject {
 
 class FixtureViewModel {
     
-    private let fixtureAPI: FixtureAPI?
+    private let fixtureAPI = FixtureAPI()
     
     weak var delegate: FixtureViewModelOutput?
     
-    init(fixtureAPI: FixtureAPI) {
-        self.fixtureAPI = fixtureAPI
-    }
-    
     func fetchFixtureData() {
-        fixtureAPI?.fetchAllFixtures { fixtures in
+        fixtureAPI.fetchAllFixtures { fixtures in
             self.delegate?.getFixtureData(data: fixtures)
         }
     }
