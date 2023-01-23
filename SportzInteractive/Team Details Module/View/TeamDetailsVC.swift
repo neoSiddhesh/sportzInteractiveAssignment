@@ -46,7 +46,6 @@ class TeamDetailsVC: UIViewController {
     func setupView() {
         let fixtureNib = UINib(nibName: "TeamDetailTableViewCell", bundle: nil)
         teamDetailsTableView.register(fixtureNib, forCellReuseIdentifier: "TeamDetailTableViewCell")
-        addPickerView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,13 +77,27 @@ class TeamDetailsVC: UIViewController {
     }
     
     @objc func filterTapped() {
-        picker.isHidden = false
+        let alertController = UIAlertController(title: "Select Filter", message: nil, preferredStyle: .actionSheet)
+        let allPlayersAction = UIAlertAction(title: "All", style: .default) { action in
+            self.displayPlayers = .allPlayers
+            self.teamDetailsTableView.reloadData()
+        }
+        let teamHomeAction = UIAlertAction(title: viewModel?.homeTeamName, style: .default) { action in
+            self.displayPlayers = .homeTeam
+            self.teamDetailsTableView.reloadData()
+        }
+        let teamAwayAction = UIAlertAction(title: viewModel?.awayTeamName, style: .default) { action in
+            self.displayPlayers = .awayTeam
+            self.teamDetailsTableView.reloadData()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alertController.addAction(allPlayersAction)
+        alertController.addAction(teamHomeAction)
+        alertController.addAction(teamAwayAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true)
     }
-    
-    @objc func doneTapped() {
-        picker.isHidden = true
-    }
-    
+
     private func addPickerView() {
         picker.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(picker)
@@ -95,10 +108,10 @@ class TeamDetailsVC: UIViewController {
         
         let barAccessory = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let btnDone = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneTapped))
+//        let btnDone = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneTapped))
         barAccessory.barStyle = .default
         barAccessory.isTranslucent = false
-        barAccessory.items = [spaceButton,btnDone]
+       // barAccessory.items = [spaceButton,btnDone]
         
         picker.addSubview(barAccessory)
         barAccessory.leadingAnchor.constraint(equalTo: picker.leadingAnchor).isActive = true
